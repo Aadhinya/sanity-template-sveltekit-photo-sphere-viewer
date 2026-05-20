@@ -9,7 +9,7 @@
 
 	let { virtualTourItem, virtualTourPageBlocks } = $props();
 
-	let wrapper = $state(null);
+	let wrapper: HTMLDivElement | null = $state(null);
 
 	$effect(() => {
 		if (wrapper) {
@@ -39,7 +39,7 @@
 					]
 				]
 			});
-			const virtualTour = viewer.getPlugin(VirtualTourPlugin);
+			const virtualTour = viewer.getPlugin(VirtualTourPlugin) as VirtualTourPlugin;
 
 			virtualTour.setNodes(virtualTourItem, virtualTourPageBlocks.start.id);
 		}

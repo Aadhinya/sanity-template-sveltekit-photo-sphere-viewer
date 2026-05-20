@@ -4,7 +4,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	let e = data.e;
+	const e = $derived(data.e);
 </script>
 
 <svelte:head>
