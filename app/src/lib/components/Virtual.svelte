@@ -2,10 +2,13 @@
 	import { Viewer } from '@photo-sphere-viewer/core';
 	import { VirtualTourPlugin } from '@photo-sphere-viewer/virtual-tour-plugin';
 	import { GalleryPlugin } from '@photo-sphere-viewer/gallery-plugin';
+	import { AutorotatePlugin } from '@photo-sphere-viewer/autorotate-plugin';
+	import { CompassPlugin } from '@photo-sphere-viewer/compass-plugin';
 
 	import '@photo-sphere-viewer/core/index.css';
 	import '@photo-sphere-viewer/virtual-tour-plugin/index.css';
 	import '@photo-sphere-viewer/gallery-plugin/index.css';
+	import '@photo-sphere-viewer/compass-plugin/index.css';
 
 	import type { VirtualTourItem, VirtualTourPageBlocks } from '$lib/types/sanity';
 
@@ -25,12 +28,35 @@
 			defaultYaw: '0deg',
 			defaultZoomLvl: 0,
 			navbar: 'zoom move gallery caption fullscreen',
+			touchmoveTwoFingers: true,
+			moveInertia: true,
+			minFov: 30,
+			maxFov: 90,
 
 			plugins: [
 				[
+					AutorotatePlugin,
+					{
+						autostartDelay: 3000,
+						autostartOnIdle: true,
+						autorotateSpeed: '2rpm',
+					}
+				],
+				[
+					CompassPlugin,
+					{
+						size: '120px',
+						position: 'bottom right',
+						navigation: true,
+					}
+				],
+				[
 					GalleryPlugin,
 					{
-						thumbnailSize: { width: 100, height: 100 }
+						thumbnailSize: { width: 100, height: 100 },
+						visibleOnLoad: false,
+						hideOnClick: true,
+						navigationArrows: true,
 					}
 				],
 				[
@@ -40,7 +66,17 @@
 						positionMode: 'manual',
 						dataMode: 'client',
 						preload: true,
-						startNodeId: virtualTourPageBlocks.start.id
+						startNodeId: virtualTourPageBlocks.start.id,
+						linksOnCompass: true,
+						transitionOptions: {
+							showLoader: false,
+							speed: '20rpm',
+							rotation: true,
+						},
+						arrowsPosition: {
+							minPitch: 0.2,
+							linkOverlapAngle: Math.PI / 4,
+						},
 					}
 				]
 			]

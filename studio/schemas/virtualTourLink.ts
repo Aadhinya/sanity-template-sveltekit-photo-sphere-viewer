@@ -35,6 +35,12 @@ export default defineType({
       title: 'Texture Y',
       description: 'Typically half of the height of the image',
     }),
+    defineField({
+      name: 'linkName',
+      type: 'string',
+      title: 'Arrow Label',
+      description: 'Optional label shown on the navigation arrow. Defaults to the target node title.',
+    }),
   ],
   preview: {
     select: {

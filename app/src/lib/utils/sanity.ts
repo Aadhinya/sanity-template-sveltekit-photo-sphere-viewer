@@ -77,12 +77,15 @@ export function virtualTourItem() {
 		    caption,
 		    "panorama":image.asset->url,
 		    "thumbnail":image.asset->url + "?w=200",
+		    description,
+		    "showInGallery": coalesce(showInGallery, true),
 		    "links": links[]{
 		      "position":{
 		        textureX,
 		        textureY
 		      },
-		      "nodeId":nodeID->_id
+		      "nodeId":nodeID->_id,
+		      "name": linkName
 		    },
 		    "panoData": {poseHeading, posePitch}
 		  }`;
