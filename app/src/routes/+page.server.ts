@@ -5,16 +5,13 @@ import { sanityClient } from '$lib/server/sanityClient';
 
 export const load: PageServerLoad = async () => {
 	try {
-		const e = await sanityClient.fetch(`{
+		const data = await sanityClient.fetch(`{
         "virtualTourPageBlocks": ${virtualTourPageBlocks()}[0],
         "virtualTourItem": ${virtualTourItem()}
       }`);
-		// console.log(e);
-		return {
-			e
-		};
-	} catch (e) {
-		console.log(e);
+		return { e: data };
+	} catch (err) {
+		console.log(err);
 		error(404, 'Not found');
 	}
 };

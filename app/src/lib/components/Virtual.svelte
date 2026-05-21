@@ -34,7 +34,7 @@
 							positionMode: 'manual',
 							dataMode: 'client',
 							preload: true,
-							startNodeId: virtualTourPageBlocks.startID
+							startNodeId: virtualTourPageBlocks.start.id
 						}
 					]
 				]

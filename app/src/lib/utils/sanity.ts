@@ -24,6 +24,6 @@ export function virtualTourItem() {
 		      },
 		      "nodeId":nodeID->_id
 		    },
-		    "panoData": {poseHeading}
+		    "panoData": {poseHeading, posePitch}
 		  }`;
 }
