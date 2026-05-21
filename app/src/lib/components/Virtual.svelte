@@ -22,24 +22,36 @@
 	$effect(() => {
 		if (!wrapper || !virtualTourPageBlocks.start) return;
 
+		const {
+			defaultZoomLvl,
+			minFov,
+			maxFov,
+			showGalleryOnLoad,
+			transitionSpeed,
+			autorotateEnabled,
+			autorotateDelay,
+			autorotateSpeed,
+		} = virtualTourPageBlocks;
+
 		const viewer = new Viewer({
 			container: wrapper,
 			loadingImg: virtualTourPageBlocks.loader ?? undefined,
 			defaultYaw: '0deg',
-			defaultZoomLvl: 0,
-			navbar: 'zoom move gallery caption fullscreen',
+			defaultZoomLvl,
+			navbar: 'autorotate zoom move gallery caption fullscreen',
 			touchmoveTwoFingers: true,
 			moveInertia: true,
-			minFov: 30,
-			maxFov: 90,
+			minFov,
+			maxFov,
 
 			plugins: [
 				[
 					AutorotatePlugin,
 					{
-						autostartDelay: 3000,
-						autostartOnIdle: true,
-						autorotateSpeed: '2rpm',
+						// null autostartDelay disables auto-start when autorotateEnabled is false
+						autostartDelay: autorotateEnabled ? autorotateDelay : null,
+						autostartOnIdle: autorotateEnabled,
+						autorotateSpeed,
 					}
 				],
 				[
@@ -54,7 +66,7 @@
 					GalleryPlugin,
 					{
 						thumbnailSize: { width: 100, height: 100 },
-						visibleOnLoad: false,
+						visibleOnLoad: showGalleryOnLoad,
 						hideOnClick: true,
 						navigationArrows: true,
 					}
@@ -70,7 +82,7 @@
 						linksOnCompass: true,
 						transitionOptions: {
 							showLoader: false,
-							speed: '20rpm',
+							speed: transitionSpeed,
 							rotation: true,
 						},
 						arrowsPosition: {
@@ -85,16 +97,27 @@
 		const virtualTour = viewer.getPlugin(VirtualTourPlugin) as VirtualTourPlugin;
 		// Sanity returns null for missing fields; PSV expects undefined — compatible at runtime
 		virtualTour.setNodes(virtualTourItem as never, virtualTourPageBlocks.start.id);
+
+		return () => viewer.destroy();
 	});
 </script>
 
 <div bind:this={wrapper} class="m-0 w-full h-full"></div>
 
 <style>
-	:global(.psv-tooltip-content > img, .psv-tooltip-content > p) {
+	:global(.psv-tooltip-content > img) {
 		display: none;
 	}
 	:global(.psv-tooltip-content > h3) {
-		font-size: 12px;
+		font-size: 0.85rem;
+		font-weight: 600;
+		margin: 0 0 0.2rem;
+	}
+	:global(.psv-tooltip-content > p) {
+		font-size: 0.75rem;
+		opacity: 0.85;
+		margin: 0;
+		max-width: 200px;
+		white-space: normal;
 	}
 </style>
