@@ -17,6 +17,7 @@
 
 <h1>{e.virtualTourPageBlocks.title}</h1>
 <p>{e.virtualTourPageBlocks.description}</p>
+<a href="/health" class="health-link">Content Health Check →</a>
 <div class="app">
 	<Virtual virtualTourPageBlocks={e.virtualTourPageBlocks} virtualTourItem={e.virtualTourItem} />
 </div>
@@ -28,4 +29,14 @@
 		height: 80vh;
 		font-family: sans-serif;
 	}
+
+	.health-link {
+		display: inline-block;
+		margin-bottom: 1rem;
+		font-size: 0.85rem;
+		color: #555;
+		text-decoration: none;
+	}
+
+	.health-link:hover { color: #000; }
 </style>
