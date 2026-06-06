@@ -32,8 +32,10 @@ export type VirtualTourLink = {
 	position: VirtualTourLinkPosition
 	nodeId: string | null
 	name: string | null
-	pitch: number | null
-	zoom: number | null
+	data: {
+		arrivalPitch: number | null
+		arrivalZoom: number | null
+	} | null
 }
 
 export type VirtualTourPanoData = {

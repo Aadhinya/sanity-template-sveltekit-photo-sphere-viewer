@@ -91,8 +91,10 @@ export function virtualTourItem() {
 		      },
 		      "nodeId":nodeID->_id,
 		      "name": linkName,
-		      "pitch": arrivalPitch,
-		      "zoom": arrivalZoom
+		      "data": {
+		        "arrivalPitch": arrivalPitch,
+		        "arrivalZoom": arrivalZoom
+		      }
 		    },
 		    "panoData": {poseHeading, posePitch}
 		  }`;

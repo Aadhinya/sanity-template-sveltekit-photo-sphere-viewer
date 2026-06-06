@@ -82,8 +82,8 @@ An embedded object inside a Virtual Tour Item's **Links** array. Each link is on
 | **Texture X** | `position.textureX` | Horizontal pixel position of the hotspot on the source panorama image. Valid values: `0`, `512`, `1024`, `1536`, `2048` (cube face boundaries) |
 | **Texture Y** | `position.textureY` | Vertical pixel position. Typically half the image height (e.g. `512` for a 1024px tall image) |
 | **Arrow Label** | `name` | Custom tooltip text on the navigation arrow. Defaults to the target node title if left blank |
-| **Arrival Pitch** | `pitch` | Vertical viewing angle (degrees) the camera snaps to when arriving at the linked node. Leave blank to use the target node's Pose Pitch |
-| **Arrival Zoom Level** | `zoom` | Zoom level (0–100) the camera snaps to when arriving at the linked node. Leave blank to use the viewer's Default Zoom Level |
+| **Arrival Pitch** | `data.arrivalPitch` | Stored for future use. Vertical viewing angle (degrees) the camera will snap to when arriving at this node via this link |
+| **Arrival Zoom Level** | `data.arrivalZoom` | Stored for future use. Zoom level (0–100) the camera will snap to when arriving via this link |
 
 ### Texture coordinate tips
 
@@ -113,6 +113,8 @@ The following settings are intentionally hardcoded in `app/src/lib/components/Vi
 | `CompassPlugin.position` | `bottom right` | Layout detail |
 | `GalleryPlugin.thumbnailSize` | `100×100 px` | Matches the `?w=200` thumbnail URL |
 | `GalleryPlugin.hideOnClick` | `true` | Good UX default; rarely needs changing |
-| `arrowsPosition.minPitch` | `0.2 rad` | Fine-tuned arrow placement for 3D mode |
+| `arrowsPosition.minPitch` | `0.2 rad` | Slightly more permissive than PSV default (0.3). All four arrowsPosition fields must be set together — PSV shallow-merges the object |
+| `arrowsPosition.maxPitch` | `Math.PI / 2` | PSV default — must be present or camera pitch becomes NaN and arrows vanish |
+| `arrowsPosition.linkPitchOffset` | `-0.1` | PSV default — shift arrows slightly downward in GPS mode |
 | `defaultYaw` | `0deg` | Per-node heading is controlled by Pose Heading in each node |
 | `navbar` order | `autorotate zoom move gallery caption fullscreen` | Fixed navbar layout |

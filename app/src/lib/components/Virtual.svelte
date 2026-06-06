@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Viewer } from '@photo-sphere-viewer/core';
+	import type { PanoData } from '@photo-sphere-viewer/core';
 	import { VirtualTourPlugin } from '@photo-sphere-viewer/virtual-tour-plugin';
 	import { GalleryPlugin } from '@photo-sphere-viewer/gallery-plugin';
 	import { AutorotatePlugin } from '@photo-sphere-viewer/autorotate-plugin';
@@ -84,10 +85,14 @@
 							showLoader: false,
 							speed: transitionSpeed,
 							rotation: true,
+							effect: 'fade',
 						},
+						// Include all four fields — PSV does a shallow merge; missing maxPitch → NaN camera pitch → arrows invisible
 						arrowsPosition: {
 							minPitch: 0.2,
+							maxPitch: Math.PI / 2,
 							linkOverlapAngle: Math.PI / 4,
+							linkPitchOffset: -0.1,
 						},
 					}
 				]
@@ -95,8 +100,41 @@
 		});
 
 		const virtualTour = viewer.getPlugin(VirtualTourPlugin) as VirtualTourPlugin;
-		// Sanity returns null for missing fields; PSV expects undefined — compatible at runtime
-		virtualTour.setNodes(virtualTourItem as never, virtualTourPageBlocks.start.id);
+
+		// Map Sanity data to PSV format: convert null → undefined, filter unusable links
+		const nodes = virtualTourItem.map((item) => ({
+			id: item.id,
+			panorama: item.panorama ?? undefined,
+			name: item.name ?? undefined,
+			caption: item.caption ?? undefined,
+			description: item.description ?? undefined,
+			thumbnail: item.thumbnail ?? undefined,
+			showInGallery: item.showInGallery,
+			// PanoData type requires geometry fields PSV doesn't need when only pose is provided — cast is safe
+			panoData: item.panoData
+				? ({
+						poseHeading: item.panoData.poseHeading ?? undefined,
+						posePitch: item.panoData.posePitch ?? undefined,
+					} as unknown as PanoData)
+				: undefined,
+			links: (item.links ?? [])
+				.filter(
+					(l) =>
+						l.nodeId !== null &&
+						l.position.textureX !== null &&
+						l.position.textureY !== null,
+				)
+				.map((l) => ({
+					nodeId: l.nodeId as string,
+					position: {
+						textureX: l.position.textureX as number,
+						textureY: l.position.textureY as number,
+					},
+					name: l.name ?? undefined,
+					data: l.data ?? undefined,
+				})),
+		}));
+		virtualTour.setNodes(nodes, virtualTourPageBlocks.start.id);
 
 		return () => viewer.destroy();
 	});
