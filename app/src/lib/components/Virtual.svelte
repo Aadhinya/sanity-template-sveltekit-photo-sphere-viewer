@@ -7,42 +7,48 @@
 	import '@photo-sphere-viewer/virtual-tour-plugin/index.css';
 	import '@photo-sphere-viewer/gallery-plugin/index.css';
 
-	let { virtualTourItem, virtualTourPageBlocks } = $props();
+	import type { VirtualTourItem, VirtualTourPageBlocks } from '$lib/types/sanity';
 
-	let wrapper: HTMLDivElement | null = $state(null);
+	let { virtualTourItem, virtualTourPageBlocks }: {
+		virtualTourItem: VirtualTourItem[];
+		virtualTourPageBlocks: VirtualTourPageBlocks;
+	} = $props();
+
+	let wrapper = $state<HTMLDivElement | null>(null);
 
 	$effect(() => {
-		if (wrapper) {
-			const viewer = new Viewer({
-				container: wrapper,
-				loadingImg: virtualTourPageBlocks.loader,
-				defaultYaw: '0deg',
-				defaultZoomLvl: 0,
-				navbar: 'zoom move gallery caption fullscreen',
+		if (!wrapper || !virtualTourPageBlocks.start) return;
 
-				plugins: [
-					[
-						GalleryPlugin,
-						{
-							thumbnailSize: { width: 100, height: 100 }
-						}
-					],
-					[
-						VirtualTourPlugin,
-						{
-							renderMode: '3d',
-							positionMode: 'manual',
-							dataMode: 'client',
-							preload: true,
-							startNodeId: virtualTourPageBlocks.startID
-						}
-					]
+		const viewer = new Viewer({
+			container: wrapper,
+			loadingImg: virtualTourPageBlocks.loader ?? undefined,
+			defaultYaw: '0deg',
+			defaultZoomLvl: 0,
+			navbar: 'zoom move gallery caption fullscreen',
+
+			plugins: [
+				[
+					GalleryPlugin,
+					{
+						thumbnailSize: { width: 100, height: 100 }
+					}
+				],
+				[
+					VirtualTourPlugin,
+					{
+						renderMode: '3d',
+						positionMode: 'manual',
+						dataMode: 'client',
+						preload: true,
+						startNodeId: virtualTourPageBlocks.start.id
+					}
 				]
-			});
-			const virtualTour = viewer.getPlugin(VirtualTourPlugin) as VirtualTourPlugin;
+			]
+		});
 
-			virtualTour.setNodes(virtualTourItem, virtualTourPageBlocks.start.id);
-		}
+		const virtualTour = viewer.getPlugin(VirtualTourPlugin) as VirtualTourPlugin;
+		// Sanity returns null for missing fields; PSV expects undefined — compatible at runtime
+		virtualTour.setNodes(virtualTourItem as never, virtualTourPageBlocks.start.id);
 	});
 </script>
 

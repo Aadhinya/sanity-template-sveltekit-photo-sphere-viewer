@@ -11,7 +11,8 @@
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
     "format": "pnpx prettier --write \"**/*.{md,css,js,ts,json}\" \"!node_modules/**\"",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typegen": "sanity schema extract && sanity typegen generate"
   },
   "keywords": [
     "sanity"
@@ -38,6 +39,6 @@
     "singleQuote": true
   },
   "engines": {
-    "node": ">= 14.18"
+    "node": ">=22.0.0"
   }
 }
